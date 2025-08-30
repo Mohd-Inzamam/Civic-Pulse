@@ -1,34 +1,7 @@
-import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function IssueList() {
-  const [issues, setIssues] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const dummyIssues = [
-    {
-      id: 1,
-      title: "Pothole on Main Street",
-      description: "Large pothole causing traffic issues.",
-      status: "Open",
-    },
-    {
-      id: 2,
-      title: "Street Light Not Working",
-      description: "The street light near park has been out for a week.",
-      status: "In Progress",
-    },
-  ];
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIssues(dummyIssues);
-      setLoading(false);
-    }, 1000);
-  }, []);
-
-  if (loading) {
-    return <div className="text-center p-4">Loading...</div>;
-  }
+function IssueList({ issues }) {
+  const navigate = useNavigate();
   return (
     <div>
       <h2 className="fw-bold text-primary mb-4">Reported Issues</h2>
@@ -61,6 +34,14 @@ function IssueList() {
                   }`}>
                   {issue.status}
                 </span>
+                <br />
+                {issue.id && (
+                  <button
+                    className="btn btn-primary btn-sm mt-2"
+                    onClick={() => navigate(`/issues/${issue.id}`)}>
+                    View Details
+                  </button>
+                )}
               </div>
 
               <p className="mb-1">

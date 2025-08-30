@@ -1,18 +1,18 @@
 import IssueList from "./IssueList";
 import ReportIssue from "./ReportIssue";
 
-function IssuePage() {
+function IssuePage({ issues, addIssue }) {
   return (
     <div className="container my-5">
       <div className="row">
         {/* Left side - Issue list */}
         <div className="col-lg-7 col-md-12 mb-3">
-          <IssueList />
+          <IssueList issues={issues} />
         </div>
 
         {/* Right side - Report issue form */}
         <div className="col-lg-5 col-md-12 mb-3">
-          <ReportIssue />
+          <ReportIssue addIssue={addIssue} />
         </div>
       </div>
     </div>

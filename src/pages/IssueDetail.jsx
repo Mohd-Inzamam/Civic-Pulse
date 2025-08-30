@@ -1,4 +1,3 @@
-import React from "react";
 import { useParams } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import {
@@ -28,7 +27,8 @@ const mockIssues = [
     location: "Park Avenue, Block A",
     category: "Electricity",
     status: "In Progress",
-    image: "https://via.placeholder.com/600x300",
+    image:
+      "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fbroken-street-light&psig=AOvVaw2m58A17uWVKC2dTfqXs_eR&ust=1756570223758000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCNjC9o-0sI8DFQAAAAAdAAAAABAE",
   },
 ];
 

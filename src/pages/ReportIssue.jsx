@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function ReportIssue() {
+function ReportIssue({ addIssue }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -75,7 +75,23 @@ function ReportIssue() {
       console.log("Validation Errors:", newErrors);
       return;
     }
+
     console.log("Form Data Submitted:", formData);
+
+    //  Adding this line to push the new issue
+    addIssue({ ...formData, id: Date.now() });
+
+    // Reset the form
+    setFormData({
+      title: "",
+      description: "",
+      category: "",
+      imageURL: "",
+      location: "",
+      status: "open",
+      upvotes: 0,
+      createdBy: "",
+    });
   };
   return (
     <div
