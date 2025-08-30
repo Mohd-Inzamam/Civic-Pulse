@@ -12,12 +12,22 @@ function App() {
 
   // Function to add a new issue
   const addIssue = (newIssue) => {
-    setIssues([...issues, newIssue]);
+    const issueWithId = { ...newIssue, id: Date.now().toString() }; // unique id
+    setIssues([...issues, issueWithId]);
   };
 
-  const updateIssueStatus = (id, newStatus) => {
-    setIssues(prev =>
-      prev.map(issue => issue.id === id ? { ...issue, status: newStatus } : issue)
+
+  // const updateIssueStatus = (id, newStatus) => {
+  //   setIssues(prev =>
+  //     prev.map(issue => issue.id === id ? { ...issue, status: newStatus } : issue)
+  //   );
+  // };
+
+  const handleStatusChange = (id, newStatus) => {
+    setIssues((prev) =>
+      prev.map((issue) =>
+        issue.id === id ? { ...issue, status: newStatus } : issue
+      )
     );
   };
 
@@ -33,10 +43,10 @@ function App() {
         <Route path="/issues" element={<IssuePage issues={issues} addIssue={addIssue} />} />
 
         {/* Issue Details Page */}
-        <Route path="/issues/:id" element={<IssueDetail />} />
+        <Route path="/issues/:id" element={<IssueDetail issues={issues} />} />
 
         {/* Dashboard */}
-        <Route path="/dashboard" element={<Dashboard issues={issues} updateIssueStatus={updateIssueStatus} />} />
+        <Route path="/dashboard" element={<Dashboard issues={issues} updateIssueStatus={handleStatusChange} />} />
       </Routes>
     </div>
   );

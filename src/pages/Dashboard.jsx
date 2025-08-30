@@ -15,9 +15,8 @@ import {
   Card,
   CardContent,
   Grow,
-  Chip,
 } from "@mui/material";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 // Function to map status to MUI color
 const getStatusColor = (status) => {
@@ -34,17 +33,17 @@ const getStatusColor = (status) => {
 };
 
 const Dashboard = ({ issues, updateIssueStatus }) => {
-  const [changedId, setChangedId] = useState(null); // Track last changed row
+  const [changedId, setChangedId] = useState(null);
 
   const handleStatusChange = (id, newStatus) => {
     if (updateIssueStatus) {
-      updateIssueStatus(id, newStatus); // Call App.js handler
+      updateIssueStatus(id, newStatus);
       setChangedId(id);
       setTimeout(() => setChangedId(null), 800);
     }
   };
 
-  // Summary
+  // Summary calculations
   const total = issues.length;
   const openCount = issues.filter((i) => i.status === "Open").length;
   const inProgressCount = issues.filter(
@@ -126,40 +125,44 @@ const Dashboard = ({ issues, updateIssueStatus }) => {
                     <TableBody>
                       {issues.map((issue, index) => (
                         <motion.tr
-                          key={issue.id}
-                          whileHover={{
-                            scale: 1.02,
-                            boxShadow: "0px 5px 10px rgba(0,0,0,0.12)",
-                          }}
+                          key={issue.id || index}
                           initial={{ opacity: 0, x: -50 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: index * 0.2 }}>
-                          <TableCell>{issue.id}</TableCell>
+                          <TableCell>{issue.id || "N/A"}</TableCell>
                           <TableCell>{issue.title}</TableCell>
                           <TableCell>
                             {issue.createdBy || issue.reporter}
                           </TableCell>
                           <TableCell>
-                            <AnimatePresence>
-                              <motion.div
-                                key={
-                                  changedId === issue.id
-                                    ? "changed"
-                                    : issue.status
-                                }
-                                initial={{ scale: 1, opacity: 0 }}
-                                animate={{ scale: 1.1, opacity: 1 }}
-                                exit={{ scale: 0.9, opacity: 0 }}
-                                transition={{ duration: 0.3 }}>
-                                <Chip
-                                  label={getStatusColor(issue.status).label}
-                                  color={getStatusColor(issue.status).color}
-                                  variant="filled"
-                                  sx={{ fontWeight: "bold" }}
-                                />
-                              </motion.div>
-                            </AnimatePresence>
+                            <motion.div
+                              initial={false}
+                              animate={{
+                                backgroundColor:
+                                  getStatusColor(issue.status).color === "error"
+                                    ? "#f44336"
+                                    : getStatusColor(issue.status).color ===
+                                      "warning"
+                                    ? "#ff9800"
+                                    : getStatusColor(issue.status).color ===
+                                      "success"
+                                    ? "#4caf50"
+                                    : "#e0e0e0",
+                              }}
+                              transition={{ duration: 0.5 }}
+                              style={{
+                                display: "inline-block",
+                                borderRadius: "16px",
+                                padding: "4px 12px",
+                              }}>
+                              <Typography
+                                variant="body2"
+                                sx={{ color: "white", fontWeight: "bold" }}>
+                                {getStatusColor(issue.status).label}
+                              </Typography>
+                            </motion.div>
                           </TableCell>
+
                           <TableCell>
                             <Select
                               value={issue.status}
