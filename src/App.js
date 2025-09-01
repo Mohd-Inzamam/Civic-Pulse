@@ -5,6 +5,7 @@ import IssueDetail from "./pages/IssueDetail"; // ✅ placeholder for Brick 3
 import Dashboard from "./pages/Dashboard";
 import { dummyIssues as initialIssues } from "./mockData";
 import { useState } from "react";
+import Signup from "./pages/Signup";
 
 
 function App() {
@@ -47,9 +48,31 @@ function App() {
 
         {/* Dashboard */}
         <Route path="/dashboard" element={<Dashboard issues={issues} updateIssueStatus={handleStatusChange} />} />
+
+        {/* Dashboard */}
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </div>
   );
 }
 
 export default App;
+
+
+/* // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDwhtTkkHN_xY8MeQOJ02OIHwmPpXQe-zE",
+  authDomain: "civicpulse-81cde.firebaseapp.com",
+  projectId: "civicpulse-81cde",
+  storageBucket: "civicpulse-81cde.firebasestorage.app",
+  messagingSenderId: "390676202124",
+  appId: "1:390676202124:web:846b24f1097c16000031a9"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);*/
