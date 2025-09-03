@@ -1,19 +1,44 @@
 // src/context/AuthContext.js
 import { createContext, useContext, useEffect, useState } from "react";
-import { getAuth, signInWithPopup, signOut, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
-import { app } from "../lib/firebase";  // import your firebase.js config
+import {
+    getAuth,
+    onAuthStateChanged,
+    GoogleAuthProvider,
+    signInWithRedirect,
+    getRedirectResult,
+    setPersistence,
+    browserLocalPersistence,
+    signOut,
+} from "firebase/auth";
+import { app } from "../lib/firebase"; // ⬅️ make sure this path is correct
 
-const AuthContext = createContext();
+const AuthContext = createContext(null);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: "select_account" });
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Catch redirect result after login
+        getRedirectResult(auth)
+            .then((result) => {
+                if (result?.user) {
+                    console.log("[Auth] getRedirectResult user:", result.user);
+                    setUser(result.user);
+                } else {
+                    console.log("[Auth] getRedirectResult: no user (not a redirect return)");
+                }
+            })
+            .catch((error) => {
+                console.error("[Auth] Redirect error:", error);
+            });
+
         // Listen for auth state changes
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            console.log("[Auth] onAuthStateChanged:", currentUser);
             setUser(currentUser);
             setLoading(false);
         });
@@ -22,16 +47,11 @@ export function AuthProvider({ children }) {
     }, []);
 
     const loginWithGoogle = async () => {
-        try {
-            await signInWithPopup(auth, provider);
-        } catch (error) {
-            console.error("Google login error:", error);
-        }
+        console.log("[Auth] signInWithRedirect…");
+        await signInWithRedirect(auth, provider);
     };
 
-    const logout = async () => {
-        await signOut(auth);
-    };
+    const logout = () => signOut(auth);
 
     return (
         <AuthContext.Provider value={{ user, loginWithGoogle, logout }}>
@@ -40,7 +60,4 @@ export function AuthProvider({ children }) {
     );
 }
 
-// Custom hook
-export function useAuth() {
-    return useContext(AuthContext);
-}
+export const useAuth = () => useContext(AuthContext);

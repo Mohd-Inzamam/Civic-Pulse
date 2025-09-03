@@ -69,7 +69,9 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
-  const { user, loginWithGoogle, logout } = useAuth();
+  const { user, logout } = useAuth();
+
+  console.log(user);
   const ActiveUnderline = () => (
     <motion.div
       layoutId="nav-underline"
@@ -231,7 +233,7 @@ export default function Navbar() {
               </Box>
 
               {/* Right: Auth */}
-              <Stack
+              {/* <Stack
                 direction="row"
                 spacing={1}
                 sx={{ display: { xs: "none", md: "flex" } }}>
@@ -246,26 +248,36 @@ export default function Navbar() {
                     {l.label}
                   </Button>
                 ))}
-              </Stack>
+              </Stack> */}
 
               {/* Right: Auth */}
-              {/* <Stack
+              <Stack
                 direction="row"
                 spacing={1}
-                sx={{ display: { xs: "none", md: "flex" } }}>
+                sx={{
+                  display: { xs: "none", md: "flex" },
+                  alignItems: "center",
+                }}>
                 {!user ? (
-                  <Button
-                    onClick={loginWithGoogle}
-                    variant="contained"
-                    sx={{ textTransform: "none" }}>
-                    Login with Google
-                  </Button>
+                  <>
+                    {authLinks.map((l) => (
+                      <Button
+                        key={l.label}
+                        component={RouterLink}
+                        to={l.to}
+                        startIcon={l.icon}
+                        variant={l.label === "Register" ? "contained" : "text"}
+                        sx={{ textTransform: "none" }}>
+                        {l.label}
+                      </Button>
+                    ))}
+                  </>
                 ) : (
                   <>
                     <Avatar
                       src={user.photoURL}
                       alt={user.displayName}
-                      sx={{ width: 32, height: 32 }}
+                      sx={{ width: 36, height: 36 }}
                     />
                     <Button
                       onClick={logout}
@@ -275,7 +287,7 @@ export default function Navbar() {
                     </Button>
                   </>
                 )}
-              </Stack> */}
+              </Stack>
 
               {/* Mobile: Menu Button */}
               <IconButton
@@ -331,7 +343,7 @@ export default function Navbar() {
               </List>
 
               <Divider sx={{ my: 1 }} />
-              <List>
+              {/* <List>
                 {authLinks.map((l) => (
                   <ListItemButton
                     key={l.label}
@@ -342,6 +354,39 @@ export default function Navbar() {
                     <ListItemText primary={l.label} sx={{ ml: 1 }} />
                   </ListItemButton>
                 ))}
+              </List> */}
+
+              <List>
+                {!user ? (
+                  authLinks.map((l) => (
+                    <ListItemButton
+                      key={l.label}
+                      component={RouterLink}
+                      to={l.to}
+                      onClick={() => setOpen(false)}>
+                      {l.icon}
+                      <ListItemText primary={l.label} sx={{ ml: 1 }} />
+                    </ListItemButton>
+                  ))
+                ) : (
+                  <>
+                    <ListItemButton disabled>
+                      <Avatar
+                        src={user.photoURL}
+                        alt={user.displayName}
+                        sx={{ width: 28, height: 28, mr: 1 }}
+                      />
+                      <ListItemText primary={user.displayName} />
+                    </ListItemButton>
+                    <ListItemButton
+                      onClick={() => {
+                        logout();
+                        setOpen(false);
+                      }}>
+                      <ListItemText primary="Logout" />
+                    </ListItemButton>
+                  </>
+                )}
               </List>
             </Box>
           </Drawer>
