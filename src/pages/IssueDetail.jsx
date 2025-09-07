@@ -8,30 +8,6 @@ import {
   Chip,
   Divider,
 } from "@mui/material";
-// import { dummyIssues } from "../mockData";
-
-// Mock data (later replace with API)
-// const mockIssues = [
-//   {
-//     id: "1",
-//     title: "Potholes on Main Street",
-//     description: "Large potholes causing traffic jams and accidents.",
-//     location: "Main Street, Sector 12",
-//     category: "Road",
-//     status: "Open",
-//     image: "https://via.placeholder.com/600x300",
-//   },
-//   {
-//     id: "2",
-//     title: "Broken Streetlight",
-//     description: "Streetlight not working in Park Avenue area.",
-//     location: "Park Avenue, Block A",
-//     category: "Electricity",
-//     status: "In Progress",
-//     image:
-//       "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fbroken-street-light&psig=AOvVaw2m58A17uWVKC2dTfqXs_eR&ust=1756570223758000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCNjC9o-0sI8DFQAAAAAdAAAAABAE",
-//   },
-// ];
 
 function IssueDetail({ issues }) {
   const { id } = useParams();

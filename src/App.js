@@ -3,14 +3,15 @@ import Navbar from "./components/Navbar";
 import IssuePage from "./pages/IssuePage";  // ✅ note plural spelling
 import IssueDetail from "./pages/IssueDetail"; // ✅ placeholder for Brick 3
 import Dashboard from "./pages/Dashboard";
-import { dummyIssues as initialIssues } from "./mockData";
 import { useState } from "react";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 
 
+const dummyIssues = [];
+
 function App() {
-  const [issues, setIssues] = useState(initialIssues);
+  const [issues, setIssues] = useState(dummyIssues);
 
   // Function to add a new issue
   const addIssue = (newIssue) => {

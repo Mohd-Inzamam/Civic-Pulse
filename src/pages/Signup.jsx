@@ -10,25 +10,70 @@ import {
   Alert,
   CircularProgress,
   Divider,
+  // ToggleButton,
+  // ToggleButtonGroup,
 } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import GoogleIcon from "@mui/icons-material/Google";
-import { useAuth } from "../context/AuthContext"; // assuming Google auth handler is here
+import { LoadScript, Autocomplete } from "@react-google-maps/api";
+import { useRef } from "react";
+
+const libraries = ["places"];
+// let
+const ROLES = [
+  "Commissioner",
+  "Deputy Commissioner",
+  "Chief Engineer",
+  "Assistant Engineer",
+  "Junior Engineer",
+  "Sanitation Officer",
+  "Health Officer",
+  "Water Supply Officer",
+  "Roads & Transport Officer",
+  "Survey Officer",
+  "Building Inspector",
+  "Revenue Officer",
+  "Accounts Officer",
+  "Clerk",
+  "Zonal Officer",
+  "Ward Officer",
+  "Fire Safety Officer",
+  "Public Works Officer",
+  "IT Officer",
+  "Other",
+];
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { loginWithGoogle } = useAuth(); // reuse existing Google auth handler
-
+  const autocompleteRef = useRef(null);
+  const [role, setRole] = useState("user"); // user | admin
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+    ssn: "",
+    department: "",
   });
+  const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const handleRoleChange = (_, newRole) => {
+    if (newRole) {
+      setRole(newRole);
+      setForm({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        ssn: "",
+        department: "",
+      });
+      setFieldErrors({});
+    }
+  };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -51,10 +96,36 @@ export default function Signup() {
         if (!value) return "Confirm password is required";
         if (value !== form.password) return "Passwords do not match";
         break;
+      case "ssn":
+        if (role === "user" && !value) return "SSN is required";
+        break;
+      case "department":
+        if (role === "admin" && !value) return "Department No is required";
+        break;
+      case "employeeId":
+        if (role === "admin" && !value) return "Employee ID is required";
+        if (role === "admin" && !/^[A-Za-z0-9-]+$/.test(value))
+          return "Employee ID must be alphanumeric";
+        break;
+      case "designation":
+        if (role === "admin" && !value) return "Designation is required";
+        break;
+      case "state":
+      case "district":
+      case "city":
+      case "ward":
+        if (role === "admin" && !value) return `${name} is required`;
+        break;
       default:
         return null;
     }
     return null;
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const errorMsg = validateField(name, value);
+    setFieldErrors((prev) => ({ ...prev, [name]: errorMsg }));
   };
 
   const getPasswordStrength = (password) => {
@@ -68,19 +139,13 @@ export default function Signup() {
     return { level: strengths[score - 1] || "", score };
   };
 
-  const [fieldErrors, setFieldErrors] = useState({});
-
-  const handleBlur = (e) => {
-    const { name, value } = e.target;
-    const errorMsg = validateField(name, value);
-    setFieldErrors((prev) => ({ ...prev, [name]: errorMsg }));
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const newErrors = {};
     Object.keys(form).forEach((key) => {
+      if (role === "user" && key === "department") return;
+      if (role === "admin" && key === "ssn") return;
       const msg = validateField(key, form[key]);
       if (msg) newErrors[key] = msg;
     });
@@ -94,15 +159,14 @@ export default function Signup() {
     setLoading(true);
 
     try {
+      // Example API call (adjust according to backend route)
       const res = await fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, role }),
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to register");
-      }
+      if (!res.ok) throw new Error("Failed to register");
 
       setSuccess("Signup successful! Redirecting to login...");
       setTimeout(() => navigate("/login"), 1800);
@@ -133,29 +197,52 @@ export default function Signup() {
                   Sign Up
                 </Typography>
 
-                {/* Google Sign Up Button */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={<GoogleIcon />}
-                    onClick={loginWithGoogle}
-                    sx={{
-                      mb: 2,
-                      py: 1,
-                      textTransform: "none",
+                {/* Role toggle with animated underline */}
+                <div className="mb-3">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-around",
+                      position: "relative",
+                      background: "#f5f5f5",
                       borderRadius: "12px",
-                      fontWeight: 500,
-                      bgcolor: "white",
+                      padding: "4px",
                     }}>
-                    Sign up with Google
-                  </Button>
-                </motion.div>
+                    {["user", "admin"].map((r) => (
+                      <Button
+                        key={r}
+                        onClick={() => setRole(r)}
+                        sx={{
+                          flex: 1,
+                          borderRadius: "10px",
+                          textTransform: "none",
+                          fontWeight: role === r ? "bold" : 500,
+                          color: role === r ? "black" : "gray",
+                          background: "transparent",
+                        }}>
+                        {r === "user" ? "User" : "Admin"}
+                      </Button>
+                    ))}
 
-                <Divider sx={{ mb: 2 }}>or sign up with email</Divider>
+                    <motion.div
+                      layoutId="underline"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                      style={{
+                        position: "absolute",
+                        bottom: 4,
+                        left: role === "user" ? "4px" : "50%",
+                        width: "calc(50% - 8px)",
+                        height: "4px",
+                        borderRadius: "2px",
+                        background: "#1976d2",
+                      }}
+                    />
+                  </div>
+                </div>
 
                 <AnimatePresence>
                   {error && (
@@ -222,6 +309,8 @@ export default function Signup() {
                     error={Boolean(fieldErrors.password)}
                     helperText={fieldErrors.password}
                   />
+
+                  {/* Password strength meter */}
                   {form.password && (
                     <motion.div
                       initial={{ opacity: 0 }}
@@ -272,6 +361,138 @@ export default function Signup() {
                     helperText={fieldErrors.confirmPassword}
                   />
 
+                  {/* Conditional field */}
+                  {/* Conditional fields with animation */}
+                  <AnimatePresence mode="wait">
+                    {role === "user" ? (
+                      <motion.div
+                        key="user-fields"
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 30 }}
+                        transition={{ duration: 0.4 }}>
+                        <TextField
+                          label="SSN"
+                          name="ssn"
+                          value={form.ssn}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          fullWidth
+                          margin="normal"
+                          error={Boolean(fieldErrors.ssn)}
+                          helperText={fieldErrors.ssn}
+                        />
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="admin-fields"
+                        initial={{ opacity: 0, x: 30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -30 }}
+                        transition={{ duration: 0.4 }}>
+                        <TextField
+                          label="Department No"
+                          name="department"
+                          value={form.department}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          fullWidth
+                          margin="normal"
+                          error={Boolean(fieldErrors.department)}
+                          helperText={fieldErrors.department}
+                        />
+
+                        <TextField
+                          label="Employee ID"
+                          name="employeeId"
+                          value={form.employeeId || ""}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          fullWidth
+                          margin="normal"
+                          error={Boolean(fieldErrors.employeeId)}
+                          helperText={fieldErrors.employeeId}
+                        />
+
+                        {/* Designation Dropdown */}
+                        <TextField
+                          select
+                          name="designation"
+                          value={form.designation || ""}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          fullWidth
+                          margin="normal"
+                          error={Boolean(fieldErrors.designation)}
+                          helperText={fieldErrors.designation}
+                          SelectProps={{ native: true, displayEmpty: true }}>
+                          <option value="" disabled>
+                            Select Designation
+                          </option>
+                          {ROLES.map((pos, idx) => (
+                            <option key={idx} value={pos}>
+                              {pos}
+                            </option>
+                          ))}
+                        </TextField>
+
+                        {/* Office Location Fields */}
+
+                        {/* Office Location (Google Places Autocomplete) */}
+                        <LoadScript
+                          googleMapsApiKey={
+                            process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+                          }
+                          libraries={["places"]}>
+                          <Autocomplete
+                            onLoad={(ref) => (autocompleteRef.current = ref)}
+                            onPlaceChanged={() => {
+                              const place = autocompleteRef.current.getPlace();
+                              if (!place?.address_components) return;
+
+                              const components = place.address_components;
+
+                              const state =
+                                components.find((c) =>
+                                  c.types.includes(
+                                    "administrative_area_level_1"
+                                  )
+                                )?.long_name || "";
+                              const district =
+                                components.find((c) =>
+                                  c.types.includes(
+                                    "administrative_area_level_2"
+                                  )
+                                )?.long_name || "";
+                              const city =
+                                components.find((c) =>
+                                  c.types.includes("locality")
+                                )?.long_name || "";
+                              const ward =
+                                components.find((c) =>
+                                  c.types.includes("sublocality_level_1")
+                                )?.long_name || "";
+
+                              setForm((prev) => ({
+                                ...prev,
+                                state,
+                                district,
+                                city,
+                                ward,
+                              }));
+                            }}>
+                            <TextField
+                              label="Office Location"
+                              placeholder="Type your office address"
+                              fullWidth
+                              margin="normal"
+                            />
+                          </Autocomplete>
+                        </LoadScript>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
                   <Button
                     type="submit"
                     variant="contained"
@@ -286,7 +507,9 @@ export default function Signup() {
                     )}
                   </Button>
 
-                  <Typography align="center" variant="body2" sx={{ mt: 2 }}>
+                  <Divider sx={{ my: 2 }} />
+
+                  <Typography align="center" variant="body2">
                     Already have an account?{" "}
                     <Button variant="text" onClick={() => navigate("/login")}>
                       Login
