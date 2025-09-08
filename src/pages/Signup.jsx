@@ -437,58 +437,28 @@ export default function Signup() {
                         </TextField>
 
                         {/* Office Location Fields */}
-
-                        {/* Office Location (Google Places Autocomplete) */}
-                        <LoadScript
-                          googleMapsApiKey={
-                            process.env.REACT_APP_GOOGLE_MAPS_API_KEY
-                          }
-                          libraries={["places"]}>
-                          <Autocomplete
-                            onLoad={(ref) => (autocompleteRef.current = ref)}
-                            onPlaceChanged={() => {
-                              const place = autocompleteRef.current.getPlace();
-                              if (!place?.address_components) return;
-
-                              const components = place.address_components;
-
-                              const state =
-                                components.find((c) =>
-                                  c.types.includes(
-                                    "administrative_area_level_1"
-                                  )
-                                )?.long_name || "";
-                              const district =
-                                components.find((c) =>
-                                  c.types.includes(
-                                    "administrative_area_level_2"
-                                  )
-                                )?.long_name || "";
-                              const city =
-                                components.find((c) =>
-                                  c.types.includes("locality")
-                                )?.long_name || "";
-                              const ward =
-                                components.find((c) =>
-                                  c.types.includes("sublocality_level_1")
-                                )?.long_name || "";
-
-                              setForm((prev) => ({
-                                ...prev,
-                                state,
-                                district,
-                                city,
-                                ward,
-                              }));
-                            }}>
-                            <TextField
-                              label="Office Location"
-                              placeholder="Type your office address"
-                              fullWidth
-                              margin="normal"
-                            />
-                          </Autocomplete>
-                        </LoadScript>
+                        {["state", "district", "city", "ward"].map((loc) => (
+                          <TextField
+                            key={loc}
+                            label={
+                              loc === "state"
+                                ? "State"
+                                : loc === "district"
+                                ? "District"
+                                : loc === "city"
+                                ? "City / Municipality"
+                                : "Ward / Zone"
+                            }
+                            name={loc}
+                            value={form[loc] || ""}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            fullWidth
+                            margin="normal"
+                            error={Boolean(fieldErrors[loc])}
+                            helperText={fieldErrors[loc]}
+                          />
+                        ))}
                       </motion.div>
                     )}
                   </AnimatePresence>
