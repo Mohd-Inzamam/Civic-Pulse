@@ -28,7 +28,7 @@ import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { motion, AnimatePresence } from "framer-motion";
 import SearchIcon from "@mui/icons-material/Search";
-import { useAuth } from "../context/AuthContext"; // 👈 at top of Navbar.jsx
+import { useAuth } from "../context/AuthContext";
 import Avatar from "@mui/material/Avatar";
 
 const links = [
@@ -64,14 +64,13 @@ function ElevationScroll(props) {
   );
 }
 
-export default function Navbar() {
+export default function Navbar({ setFilters }) {
   const { pathname } = useLocation();
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
   const { user, logout } = useAuth();
 
-  console.log(user);
   const ActiveUnderline = () => (
     <motion.div
       layoutId="nav-underline"
@@ -144,24 +143,18 @@ export default function Navbar() {
     );
   };
 
+  // 🔑 Shared search logic
+  const handleSearch = (value) => {
+    setSearchValue(value);
+    setFilters((prev) => ({ ...prev, search: value }));
+  };
+
   const SearchBar = () => (
     <TextField
       size="small"
       placeholder="Search issues..."
       value={searchValue}
-      onChange={(e) => setSearchValue(e.target.value)}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          console.log("Search:", searchValue);
-        }
-      }}
-      sx={{
-        minWidth: 220,
-        maxWidth: 280,
-        backgroundColor: "white",
-        borderRadius: 2,
-        boxShadow: 1,
-      }}
+      onChange={(e) => handleSearch(e.target.value)}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -201,7 +194,7 @@ export default function Navbar() {
               {/* Spacer */}
               <Box sx={{ flexGrow: 1 }} />
 
-              {/* Search (desktop) */}
+              {/* 🔎 Search (desktop) */}
               <Box sx={{ display: { xs: "none", md: "block" }, mr: 2 }}>
                 <motion.div
                   initial={{ width: 200 }}
@@ -210,13 +203,8 @@ export default function Navbar() {
                   <TextField
                     size="small"
                     placeholder="Search issues..."
-                    // value={searchQuery}
-                    // onChange={(e) => setSearchQuery(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        // console.log("Search:", searchQuery);
-                      }
-                    }}
+                    value={searchValue}
+                    onChange={(e) => handleSearch(e.target.value)}
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -231,24 +219,6 @@ export default function Navbar() {
                   />
                 </motion.div>
               </Box>
-
-              {/* Right: Auth */}
-              {/* <Stack
-                direction="row"
-                spacing={1}
-                sx={{ display: { xs: "none", md: "flex" } }}>
-                {authLinks.map((l) => (
-                  <Button
-                    key={l.label}
-                    component={RouterLink}
-                    to={l.to}
-                    startIcon={l.icon}
-                    variant={l.label === "Register" ? "contained" : "text"}
-                    sx={{ textTransform: "none" }}>
-                    {l.label}
-                  </Button>
-                ))}
-              </Stack> */}
 
               {/* Right: Auth */}
               <Stack
@@ -315,7 +285,7 @@ export default function Navbar() {
               </Stack>
               <Divider sx={{ my: 1 }} />
 
-              {/* Search (mobile) */}
+              {/* 🔎 Search (mobile) */}
               <Box sx={{ mb: 2 }}>
                 <SearchBar />
               </Box>
@@ -343,18 +313,6 @@ export default function Navbar() {
               </List>
 
               <Divider sx={{ my: 1 }} />
-              {/* <List>
-                {authLinks.map((l) => (
-                  <ListItemButton
-                    key={l.label}
-                    component={RouterLink}
-                    to={l.to}
-                    onClick={() => setOpen(false)}>
-                    {l.icon}
-                    <ListItemText primary={l.label} sx={{ ml: 1 }} />
-                  </ListItemButton>
-                ))}
-              </List> */}
 
               <List>
                 {!user ? (
