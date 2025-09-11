@@ -98,20 +98,34 @@ function ReportIssue({ addIssue }) {
     setPreview(null);
   };
 
+  // sx={{
+  //           borderRadius: "20px",
+  //           mt: 3,
+  //           maxWidth: 700,
+  //           mx: "auto",
+  //           p: 3,
+  //         }}
+
   return (
-    <div style={{ background: "#f8f9fa", minHeight: "100vh", padding: "30px" }}>
+    <>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}>
+        transition={{ duration: 0.6 }}
+        whileHover={{ scale: 1.02, transition: { duration: 0.3 } }}>
         <Card
           elevation={6}
           sx={{
-            borderRadius: "20px",
-            mt: 3,
             maxWidth: 700,
             mx: "auto",
+            mt: 3,
             p: 3,
+            // Glassmorphism styles
+            background: "rgba(255, 255, 255, 0.7)", // Semi-transparent background
+            backdropFilter: "blur(10px)",
+            borderRadius: "20px",
+            border: "1px solid rgba(255, 255, 255, 0.3)",
+            boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)", // Softer, modern shadow
           }}>
           <CardContent>
             <Typography
@@ -291,7 +305,7 @@ function ReportIssue({ addIssue }) {
           </CardContent>
         </Card>
       </motion.div>
-    </div>
+    </>
   );
 }
 
