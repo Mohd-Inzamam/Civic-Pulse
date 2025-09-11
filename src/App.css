@@ -1,4 +1,39 @@
-.App {
+/* Existing styles remain as-is... */
+
+/* .App {
+  text-align: center;
+} */
+
+/* ... your current logo/header styles ... */
+
+/* === Reusable UI Elements === */
+.card {
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.text-muted {
+  color: var(--text-secondary);
+}
+
+.btn-primary {
+  background: var(--text-primary);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +70,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */

@@ -1,4 +1,36 @@
+/* === Theme Variables === */
+:root {
+  --bg-light: #F5F7FA;
+  /* Background */
+  --bg-surface: #E4E7EB;
+  /* Cards, sidebars */
+  --border: #CBD2D9;
+  /* Dividers, outlines */
+  --text-secondary: #9AA5B1;
+  --text-primary: #7B8794;
+  --radius: 12px;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* === Existing body reset === */
 body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  background-color: var(--bg-light);
+  color: var(--text-primary);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -10,4 +42,4 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
+} */

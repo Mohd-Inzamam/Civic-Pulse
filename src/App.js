@@ -6,6 +6,7 @@ import Dashboard from "./pages/Dashboard";
 import { useState } from "react";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import "./App.css"
 
 const dummyIssues = [];
 
