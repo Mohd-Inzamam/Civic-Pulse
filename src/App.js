@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import IssuePage from "./pages/IssuePage";
 import IssueDetail from "./pages/IssueDetail";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./modules/pages/Dashboard";
 import { useState } from "react";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
