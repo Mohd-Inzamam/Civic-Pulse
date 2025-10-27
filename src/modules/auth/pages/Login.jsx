@@ -13,11 +13,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // Import reusable components
-import FormField from "../components/common/FormField";
-import PasswordField from "../components/common/PasswordField";
-import SubmitButton from "../components/common/SubmitButton";
-import RoleToggle from "../components/common/RoleToggle";
-import PageCard from "../components/common/PageCard";
+import FormField from "../../../components/common/FormField";
+import PasswordField from "../../../components/common/PasswordField";
+import SubmitButton from "../../../components/common/SubmitButton";
+import RoleToggle from "../../../components/common/RoleToggle";
+import PageCard from "../../../components/common/PageCard";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -142,8 +142,7 @@ export default function Login() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert severity="error" className="mb-3">
                     {error}
                   </Alert>
@@ -155,13 +154,11 @@ export default function Login() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert
                     severity="success"
                     icon={<CheckCircleIcon fontSize="inherit" />}
-                    className="mb-3"
-                  >
+                    className="mb-3">
                     {success}
                   </Alert>
                 </motion.div>
@@ -196,8 +193,7 @@ export default function Login() {
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -30 }}
-                    transition={{ duration: 0.4 }}
-                  >
+                    transition={{ duration: 0.4 }}>
                     <FormField
                       label="Department"
                       name="department"
@@ -239,8 +235,7 @@ export default function Login() {
                   alignItems: "center",
                   marginTop: "16px",
                   marginBottom: "8px",
-                }}
-              >
+                }}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -266,16 +261,14 @@ export default function Login() {
                       backgroundColor: "rgba(25, 118, 210, 0.04)",
                     },
                   }}
-                  onClick={() => navigate("/forgot-password")}
-                >
+                  onClick={() => navigate("/forgot-password")}>
                   Forgot Password?
                 </Button>
               </motion.div>
 
               <SubmitButton
                 loading={loading}
-                animationDelay={role === "admin" ? 0.6 : 0.4}
-              >
+                animationDelay={role === "admin" ? 0.6 : 0.4}>
                 Login
               </SubmitButton>
 
@@ -286,8 +279,7 @@ export default function Login() {
                 <Button
                   variant="text"
                   onClick={() => navigate("/signup")}
-                  sx={{ textTransform: "none" }}
-                >
+                  sx={{ textTransform: "none" }}>
                   Sign Up
                 </Button>
               </Typography>
@@ -299,13 +291,11 @@ export default function Login() {
                 transition={{
                   duration: 0.4,
                   delay: role === "admin" ? 0.8 : 0.6,
-                }}
-              >
+                }}>
                 <Typography
                   align="center"
                   variant="caption"
-                  sx={{ mt: 2, color: "text.secondary" }}
-                >
+                  sx={{ mt: 2, color: "text.secondary" }}>
                   {role === "admin"
                     ? "Demo Admin: admin@demo.com | password123 | Dept: IT | ID: EMP-001"
                     : "Demo User: user@demo.com | password123"}

@@ -1,23 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import {
-  Typography,
-  Alert,
-  Divider,
-  Button,
-} from "@mui/material";
+import { Typography, Alert, Divider, Button } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 // Import reusable components
-import FormField from "../../components/common/FormField";
-import PasswordField from "../../components/common/PasswordField";
-import SelectField from "../../components/common/SelectField";
-import SubmitButton from "../../components/common/SubmitButton";
-import RoleToggle from "../../components/common/RoleToggle";
-import PageCard from "../../components/common/PageCard";
-import PasswordStrengthIndicator from "../../components/common/PasswordStrengthIndicator";
+import FormField from "../../../components/common/FormField";
+import PasswordField from "../../../components/common/PasswordField";
+import SelectField from "../../../components/common/SelectField";
+import SubmitButton from "../../../components/common/SubmitButton";
+import RoleToggle from "../../../components/common/RoleToggle";
+import PageCard from "../../../components/common/PageCard";
+import PasswordStrengthIndicator from "../../../components/common/PasswordStrengthIndicator";
 
 const ROLES = [
   "Commissioner",
@@ -117,7 +112,6 @@ export default function Signup() {
     setFieldErrors((prev) => ({ ...prev, [name]: errorMsg }));
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -146,7 +140,9 @@ export default function Signup() {
 
       if (!res.ok) throw new Error("Failed to register");
 
-      setSuccess("Signup successful! Please check your email to verify your account.");
+      setSuccess(
+        "Signup successful! Please check your email to verify your account."
+      );
       setTimeout(() => navigate("/verify-email"), 1800);
     } catch (err) {
       setError(err.message);
@@ -155,7 +151,7 @@ export default function Signup() {
     }
   };
 
-  const roleOptions = ROLES.map(role => ({ value: role, label: role }));
+  const roleOptions = ROLES.map((role) => ({ value: role, label: role }));
 
   return (
     <Container className="mt-5">
@@ -173,8 +169,7 @@ export default function Signup() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert severity="error" className="mb-3">
                     {error}
                   </Alert>
@@ -186,13 +181,11 @@ export default function Signup() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert
                     severity="success"
                     icon={<CheckCircleIcon fontSize="inherit" />}
-                    className="mb-3"
-                  >
+                    className="mb-3">
                     {success}
                   </Alert>
                 </motion.div>
@@ -249,8 +242,7 @@ export default function Signup() {
                     initial={{ opacity: 0, x: -30 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 30 }}
-                    transition={{ duration: 0.4 }}
-                  >
+                    transition={{ duration: 0.4 }}>
                     <FormField
                       label="SSN"
                       name="ssn"
@@ -267,8 +259,7 @@ export default function Signup() {
                     initial={{ opacity: 0, x: 30 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -30 }}
-                    transition={{ duration: 0.4 }}
-                  >
+                    transition={{ duration: 0.4 }}>
                     <FormField
                       label="Department No"
                       name="department"
@@ -328,8 +319,7 @@ export default function Signup() {
 
               <SubmitButton
                 loading={loading}
-                animationDelay={role === "admin" ? 1.2 : 0.6}
-              >
+                animationDelay={role === "admin" ? 1.2 : 0.6}>
                 Sign Up
               </SubmitButton>
 

@@ -9,8 +9,8 @@ import {
   Button,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import StatusBadge from "../../components/common/StatusBadge";
-import CategoryBadge from "../../components/common/CategoryBadge";
+import StatusBadge from "../../../components/common/StatusBadge";
+import CategoryBadge from "../../../components/common/CategoryBadge";
 
 function IssueDetail({ issues, setIssues }) {
   const { id } = useParams();
@@ -90,8 +90,7 @@ function IssueDetail({ issues, setIssues }) {
               <Row className="mt-3">
                 <Col>
                   <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                    ✅ <b>Status:</b>{" "}
-                    <StatusBadge status={issue.status} />
+                    ✅ <b>Status:</b> <StatusBadge status={issue.status} />
                   </Typography>
                 </Col>
               </Row>
@@ -103,9 +102,9 @@ function IssueDetail({ issues, setIssues }) {
                     variant="outlined"
                     onClick={handleUpvote}
                     disabled={votedIssues.includes(issue.id)}
-                    sx={{ textTransform: 'none' }}
-                  >
-                    👍 {votedIssues.includes(issue.id) ? "Voted" : "Upvote"} ({issue.upvotes})
+                    sx={{ textTransform: "none" }}>
+                    👍 {votedIssues.includes(issue.id) ? "Voted" : "Upvote"} (
+                    {issue.upvotes})
                   </Button>
                 </Col>
               </Row>

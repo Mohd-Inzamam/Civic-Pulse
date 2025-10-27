@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
-import { TextField, IconButton, InputAdornment } from '@mui/material';
-import { VisibilityIcon, VisibilityOffIcon } from '@mui/icons-material';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { TextField, IconButton, InputAdornment } from "@mui/material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import { motion } from "framer-motion";
 
 const PasswordField = ({
-  label = 'Password',
-  name = 'password',
+  label = "Password",
+  name = "password",
   value,
   onChange,
   onBlur,
   error,
   helperText,
   fullWidth = true,
-  margin = 'normal',
+  margin = "normal",
   placeholder,
   disabled = false,
   required = false,
-  autoComplete = 'current-password',
+  autoComplete = "current-password",
   animationDelay = 0,
   ...props
 }) => {
@@ -30,15 +31,14 @@ const PasswordField = ({
     <motion.div
       initial={{ opacity: 0, x: -30 }}
       animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4, delay: animationDelay }}
-    >
+      transition={{ duration: 0.4, delay: animationDelay }}>
       <TextField
         label={label}
         name={name}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        type={showPassword ? 'text' : 'password'}
+        type={showPassword ? "text" : "password"}
         fullWidth={fullWidth}
         margin={margin}
         placeholder={placeholder}
@@ -53,15 +53,14 @@ const PasswordField = ({
               <IconButton
                 onClick={togglePasswordVisibility}
                 edge="end"
-                sx={{ color: 'text.secondary' }}
-              >
+                sx={{ color: "text.secondary" }}>
                 {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
               </IconButton>
             </InputAdornment>
           ),
         }}
         sx={{
-          '& .MuiOutlinedInput-root': {
+          "& .MuiOutlinedInput-root": {
             borderRadius: 2,
           },
         }}

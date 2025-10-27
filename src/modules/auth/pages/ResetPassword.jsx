@@ -1,26 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import {
-  Typography,
-  Alert,
-  Button,
-  CircularProgress,
-} from "@mui/material";
+import { Typography, Alert, Button, CircularProgress } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // Import reusable components
-import PasswordField from "../../components/common/PasswordField";
-import SubmitButton from "../../components/common/SubmitButton";
-import PageCard from "../../components/common/PageCard";
+import PasswordField from "../../../components/common/PasswordField";
+import SubmitButton from "../../../components/common/SubmitButton";
+import PageCard from "../../../components/common/PageCard";
 
 export default function ResetPassword() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
-  
+
   const [formData, setFormData] = useState({
     password: "",
     confirmPassword: "",
@@ -59,10 +54,14 @@ export default function ResetPassword() {
   const validatePassword = (password) => {
     if (!password) return "Password is required";
     if (password.length < 8) return "Password must be at least 8 characters";
-    if (!/(?=.*[a-z])/.test(password)) return "Password must contain at least one lowercase letter";
-    if (!/(?=.*[A-Z])/.test(password)) return "Password must contain at least one uppercase letter";
-    if (!/(?=.*\d)/.test(password)) return "Password must contain at least one number";
-    if (!/(?=.*[@$!%*?&])/.test(password)) return "Password must contain at least one special character";
+    if (!/(?=.*[a-z])/.test(password))
+      return "Password must contain at least one lowercase letter";
+    if (!/(?=.*[A-Z])/.test(password))
+      return "Password must contain at least one uppercase letter";
+    if (!/(?=.*\d)/.test(password))
+      return "Password must contain at least one number";
+    if (!/(?=.*[@$!%*?&])/.test(password))
+      return "Password must contain at least one special character";
     return null;
   };
 
@@ -74,32 +73,34 @@ export default function ResetPassword() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
     let error = "";
-    
+
     if (name === "password") {
       error = validatePassword(value);
     } else if (name === "confirmPassword") {
       error = validateConfirmPassword(value);
     }
-    
-    setErrors(prev => ({ ...prev, [name]: error }));
+
+    setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const passwordError = validatePassword(formData.password);
-    const confirmPasswordError = validateConfirmPassword(formData.confirmPassword);
+    const confirmPasswordError = validateConfirmPassword(
+      formData.confirmPassword
+    );
 
     if (passwordError || confirmPasswordError) {
       setErrors({
@@ -151,8 +152,7 @@ export default function ResetPassword() {
                 variant="contained"
                 startIcon={<ArrowBackIcon />}
                 onClick={() => navigate("/login")}
-                fullWidth
-              >
+                fullWidth>
                 Back to Login
               </Button>
             </PageCard>
@@ -168,7 +168,7 @@ export default function ResetPassword() {
         <Row className="justify-content-center">
           <Col xs={12} md={6} lg={5}>
             <PageCard title="Verifying Token">
-              <div style={{ textAlign: 'center', padding: '2rem' }}>
+              <div style={{ textAlign: "center", padding: "2rem" }}>
                 <CircularProgress />
                 <Typography variant="body2" sx={{ mt: 2 }}>
                   Verifying reset token...
@@ -190,8 +190,7 @@ export default function ResetPassword() {
               variant="body2"
               color="text.secondary"
               align="center"
-              sx={{ mb: 3 }}
-            >
+              sx={{ mb: 3 }}>
               Enter your new password below. Make sure it's strong and secure.
             </Typography>
 
@@ -201,8 +200,7 @@ export default function ResetPassword() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert severity="error" className="mb-3">
                     {error}
                   </Alert>
@@ -214,13 +212,11 @@ export default function ResetPassword() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert
                     severity="success"
                     icon={<CheckCircleIcon fontSize="inherit" />}
-                    className="mb-3"
-                  >
+                    className="mb-3">
                     {success}
                   </Alert>
                 </motion.div>
@@ -252,8 +248,7 @@ export default function ResetPassword() {
               <SubmitButton
                 loading={loading}
                 animationDelay={0.3}
-                sx={{ mt: 2 }}
-              >
+                sx={{ mt: 2 }}>
                 Reset Password
               </SubmitButton>
 
@@ -265,8 +260,7 @@ export default function ResetPassword() {
                   mt: 2,
                   width: "100%",
                   textTransform: "none",
-                }}
-              >
+                }}>
                 Back to Login
               </Button>
             </form>

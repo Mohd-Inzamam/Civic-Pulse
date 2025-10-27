@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import React from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import {
   Drawer,
   Box,
@@ -13,19 +13,20 @@ import {
   Stack,
   TextField,
   InputAdornment,
-} from '@mui/material';
-import { CloseRoundedIcon, SearchRoundedIcon } from '@mui/icons-material';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../../context/AuthContext';
-import ThemeToggle from '../common/ThemeToggle';
+} from "@mui/material";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
+import ThemeToggle from "../common/ThemeToggle";
 
-const MobileDrawer = ({ 
-  open, 
-  onClose, 
-  links, 
-  authLinks, 
-  searchValue, 
-  onSearchChange 
+const MobileDrawer = ({
+  open,
+  onClose,
+  links,
+  authLinks,
+  searchValue,
+  onSearchChange,
 }) => {
   const { pathname } = useLocation();
   const { user, logout } = useAuth();
@@ -40,18 +41,16 @@ const MobileDrawer = ({
           width: 300,
           borderTopLeftRadius: 20,
           borderBottomLeftRadius: 20,
-          bgcolor: 'rgba(255,255,255,0.8)',
-          backdropFilter: 'blur(12px)',
-          boxShadow: '-4px 0 20px rgba(0,0,0,0.1)',
+          bgcolor: "rgba(255,255,255,0.8)",
+          backdropFilter: "blur(12px)",
+          boxShadow: "-4px 0 20px rgba(0,0,0,0.1)",
         },
-      }}
-    >
+      }}>
       <Box sx={{ width: 300, p: 2 }} role="presentation">
         <Stack
           direction="row"
           alignItems="center"
-          justifyContent="space-between"
-        >
+          justifyContent="space-between">
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
             Menu
           </Typography>
@@ -79,9 +78,9 @@ const MobileDrawer = ({
               ),
               style: {
                 borderRadius: 50,
-                backgroundColor: 'rgba(255,255,255,0.6)',
-                backdropFilter: 'blur(8px)',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                backgroundColor: "rgba(255,255,255,0.6)",
+                backdropFilter: "blur(8px)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
               },
             }}
           />
@@ -95,14 +94,12 @@ const MobileDrawer = ({
                 initial={{ opacity: 0, x: 12 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 12 }}
-                transition={{ delay: idx * 0.05 }}
-              >
+                transition={{ delay: idx * 0.05 }}>
                 <ListItemButton
                   component={RouterLink}
                   to={l.to}
                   onClick={onClose}
-                  selected={pathname === l.to}
-                >
+                  selected={pathname === l.to}>
                   {l.icon}
                   <ListItemText primary={l.label} sx={{ ml: 1 }} />
                 </ListItemButton>
@@ -120,8 +117,7 @@ const MobileDrawer = ({
                 key={l.label}
                 component={RouterLink}
                 to={l.to}
-                onClick={onClose}
-              >
+                onClick={onClose}>
                 {l.icon}
                 <ListItemText primary={l.label} sx={{ ml: 1 }} />
               </ListItemButton>
@@ -140,8 +136,7 @@ const MobileDrawer = ({
                 onClick={() => {
                   logout();
                   onClose();
-                }}
-              >
+                }}>
                 <ListItemText primary="Logout" />
               </ListItemButton>
             </>

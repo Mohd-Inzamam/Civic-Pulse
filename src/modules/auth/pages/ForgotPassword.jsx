@@ -1,20 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import {
-  Typography,
-  Alert,
-  Button,
-  CircularProgress,
-} from "@mui/material";
+import { Typography, Alert, Button, CircularProgress } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 // Import reusable components
-import FormField from "../../components/common/FormField";
-import SubmitButton from "../../components/common/SubmitButton";
-import PageCard from "../../components/common/PageCard";
+import FormField from "../../../components/common/FormField";
+import SubmitButton from "../../../components/common/SubmitButton";
+import PageCard from "../../../components/common/PageCard";
 
 export default function ForgotPassword() {
   const navigate = useNavigate();
@@ -26,7 +21,8 @@ export default function ForgotPassword() {
 
   const validateEmail = (email) => {
     if (!email) return "Email is required";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return "Invalid email format";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return "Invalid email format";
     return null;
   };
 
@@ -80,9 +76,9 @@ export default function ForgotPassword() {
               variant="body2"
               color="text.secondary"
               align="center"
-              sx={{ mb: 3 }}
-            >
-              Enter your email address and we'll send you a link to reset your password.
+              sx={{ mb: 3 }}>
+              Enter your email address and we'll send you a link to reset your
+              password.
             </Typography>
 
             <AnimatePresence>
@@ -91,8 +87,7 @@ export default function ForgotPassword() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert severity="error" className="mb-3">
                     {error}
                   </Alert>
@@ -104,13 +99,11 @@ export default function ForgotPassword() {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  transition={{ duration: 0.3 }}
-                >
+                  transition={{ duration: 0.3 }}>
                   <Alert
                     severity="success"
                     icon={<CheckCircleIcon fontSize="inherit" />}
-                    className="mb-3"
-                  >
+                    className="mb-3">
                     {success}
                   </Alert>
                 </motion.div>
@@ -132,8 +125,7 @@ export default function ForgotPassword() {
               <SubmitButton
                 loading={loading}
                 animationDelay={0.2}
-                sx={{ mt: 2 }}
-              >
+                sx={{ mt: 2 }}>
                 Send Reset Link
               </SubmitButton>
 
@@ -145,8 +137,7 @@ export default function ForgotPassword() {
                   mt: 2,
                   width: "100%",
                   textTransform: "none",
-                }}
-              >
+                }}>
                 Back to Login
               </Button>
             </form>
@@ -155,14 +146,12 @@ export default function ForgotPassword() {
               variant="caption"
               color="text.secondary"
               align="center"
-              sx={{ mt: 3, display: "block" }}
-            >
+              sx={{ mt: 3, display: "block" }}>
               Remember your password?{" "}
               <Button
                 variant="text"
                 onClick={() => navigate("/login")}
-                sx={{ textTransform: "none", p: 0, minWidth: "auto" }}
-              >
+                sx={{ textTransform: "none", p: 0, minWidth: "auto" }}>
                 Sign in
               </Button>
             </Typography>

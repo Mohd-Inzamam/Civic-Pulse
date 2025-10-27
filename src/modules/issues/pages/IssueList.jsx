@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Typography, Alert } from '@mui/material';
-import IssueCard from '../../components/issues/IssueCard';
+import { Typography, Alert } from "@mui/material";
+import IssueCard from "../../../components/issues/IssueCard";
 
 function IssueList({ issues, setIssues }) {
   const [votedIssues, setVotedIssues] = useState([]);
@@ -30,27 +30,28 @@ function IssueList({ issues, setIssues }) {
 
   return (
     <div>
-      <Typography variant="h4" sx={{ fontWeight: 'bold', color: 'primary.main', mb: 4 }}>
+      <Typography
+        variant="h4"
+        sx={{ fontWeight: "bold", color: "primary.main", mb: 4 }}>
         Reported Issues
       </Typography>
 
       {issues.length === 0 ? (
-        <Alert 
-          severity="info" 
-          sx={{ 
-            borderRadius: 3, 
+        <Alert
+          severity="info"
+          sx={{
+            borderRadius: 3,
             boxShadow: 1,
-            '& .MuiAlert-message': {
-              fontWeight: 'bold'
-            }
-          }}
-        >
+            "& .MuiAlert-message": {
+              fontWeight: "bold",
+            },
+          }}>
           <strong>No issues match your filters.</strong>
           <br />
           Try adjusting search, category, or status filters.
         </Alert>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           {issues.map((issue, index) => (
             <IssueCard
               key={issue.id}

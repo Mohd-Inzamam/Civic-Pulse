@@ -1,18 +1,13 @@
 import { useState } from "react";
-import {
-  Typography,
-  Button,
-  Grid,
-  Card,
-} from "@mui/material";
+import { Typography, Button, Grid, Card } from "@mui/material";
 import { motion } from "framer-motion";
 import { PhotoCamera } from "@mui/icons-material";
 
 // Import reusable components
-import FormField from "../../components/common/FormField";
-import SelectField from "../../components/common/SelectField";
-import SubmitButton from "../../components/common/SubmitButton";
-import PageCard from "../../components/common/PageCard";
+import FormField from "../../../components/common/FormField";
+import SelectField from "../../../components/common/SelectField";
+import SubmitButton from "../../../components/common/SubmitButton";
+import PageCard from "../../../components/common/PageCard";
 
 const categoryOptions = [
   { value: "Road", label: "Road" },
@@ -106,7 +101,12 @@ function ReportIssue({ addIssue }) {
   };
 
   return (
-    <div style={{ background: 'var(--color-bg-default)', minHeight: '100vh', padding: '30px' }}>
+    <div
+      style={{
+        background: "var(--color-bg-default)",
+        minHeight: "100vh",
+        padding: "30px",
+      }}>
       <PageCard title="Report an Issue">
         <form onSubmit={handleSubmit}>
           <Grid container spacing={3}>
@@ -149,7 +149,7 @@ function ReportIssue({ addIssue }) {
                 animationDelay={0.3}
               />
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <FormField
                 label="Location"
@@ -173,8 +173,7 @@ function ReportIssue({ addIssue }) {
                   borderRadius: 2,
                   textTransform: "none",
                   fontWeight: "bold",
-                }}
-              >
+                }}>
                 {imageFile ? "Change Image" : "Upload Image"}
                 <input
                   type="file"
@@ -184,7 +183,10 @@ function ReportIssue({ addIssue }) {
                 />
               </Button>
               {errors.image && (
-                <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
+                <Typography
+                  variant="caption"
+                  color="error"
+                  sx={{ mt: 1, display: "block" }}>
                   {errors.image}
                 </Typography>
               )}
@@ -198,8 +200,7 @@ function ReportIssue({ addIssue }) {
                     borderRadius: 2,
                     overflow: "hidden",
                     boxShadow: 2,
-                  }}
-                >
+                  }}>
                   <img
                     src={preview}
                     alt="Preview"
@@ -224,7 +225,7 @@ function ReportIssue({ addIssue }) {
                 animationDelay={0.5}
               />
             </Grid>
-            
+
             <Grid item xs={12} sm={6}>
               <FormField
                 label="Upvotes"
@@ -255,9 +256,9 @@ function ReportIssue({ addIssue }) {
               <SubmitButton
                 animationDelay={0.8}
                 sx={{
-                  background: "linear-gradient(90deg, #1976d2 0%, #2196f3 100%)",
-                }}
-              >
+                  background:
+                    "linear-gradient(90deg, #1976d2 0%, #2196f3 100%)",
+                }}>
                 Submit Issue
               </SubmitButton>
             </Grid>

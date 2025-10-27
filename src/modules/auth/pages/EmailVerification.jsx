@@ -1,25 +1,20 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
-import {
-  Typography,
-  Alert,
-  Button,
-  CircularProgress,
-} from "@mui/material";
+import { Typography, Alert, Button, CircularProgress } from "@mui/material";
 import { motion } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import EmailIcon from "@mui/icons-material/Email";
 
 // Import reusable components
-import PageCard from "../../components/common/PageCard";
+import PageCard from "../../../components/common/PageCard";
 
 export default function EmailVerification() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("token");
   const email = searchParams.get("email");
-  
+
   const [status, setStatus] = useState("verifying"); // verifying, success, error, expired
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -77,7 +72,9 @@ export default function EmailVerification() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to resend verification email");
+        throw new Error(
+          errorData.message || "Failed to resend verification email"
+        );
       }
 
       setError(""); // Clear any previous errors
@@ -96,7 +93,7 @@ export default function EmailVerification() {
     switch (status) {
       case "verifying":
         return (
-          <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div style={{ textAlign: "center", padding: "2rem" }}>
             <CircularProgress size={60} />
             <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
               Verifying your email...
@@ -113,20 +110,21 @@ export default function EmailVerification() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            style={{ textAlign: 'center', padding: '2rem' }}
-          >
-            <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
-            <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+            style={{ textAlign: "center", padding: "2rem" }}>
+            <CheckCircleIcon
+              sx={{ fontSize: 80, color: "success.main", mb: 2 }}
+            />
+            <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
               Email Verified!
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              Your email has been successfully verified. You can now access all features of CivicPulse.
+              Your email has been successfully verified. You can now access all
+              features of CivicPulse.
             </Typography>
             <Button
               variant="contained"
               onClick={() => navigate("/login")}
-              sx={{ textTransform: 'none' }}
-            >
+              sx={{ textTransform: "none" }}>
               Continue to Login
             </Button>
           </motion.div>
@@ -134,9 +132,9 @@ export default function EmailVerification() {
 
       case "expired":
         return (
-          <div style={{ textAlign: 'center', padding: '2rem' }}>
-            <EmailIcon sx={{ fontSize: 80, color: 'warning.main', mb: 2 }} />
-            <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+          <div style={{ textAlign: "center", padding: "2rem" }}>
+            <EmailIcon sx={{ fontSize: 80, color: "warning.main", mb: 2 }} />
+            <Typography variant="h5" sx={{ mb: 2, fontWeight: "bold" }}>
               Verification Link Expired
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
@@ -146,15 +144,13 @@ export default function EmailVerification() {
               variant="contained"
               onClick={resendVerification}
               disabled={loading}
-              sx={{ textTransform: 'none', mr: 2 }}
-            >
+              sx={{ textTransform: "none", mr: 2 }}>
               {loading ? <CircularProgress size={20} /> : "Resend Verification"}
             </Button>
             <Button
               variant="outlined"
               onClick={() => navigate("/login")}
-              sx={{ textTransform: 'none' }}
-            >
+              sx={{ textTransform: "none" }}>
               Back to Login
             </Button>
           </div>
@@ -163,7 +159,7 @@ export default function EmailVerification() {
       case "error":
       default:
         return (
-          <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div style={{ textAlign: "center", padding: "2rem" }}>
             <Alert severity="error" sx={{ mb: 3 }}>
               {error}
             </Alert>
@@ -177,15 +173,13 @@ export default function EmailVerification() {
               variant="contained"
               onClick={resendVerification}
               disabled={loading}
-              sx={{ textTransform: 'none', mr: 2 }}
-            >
+              sx={{ textTransform: "none", mr: 2 }}>
               {loading ? <CircularProgress size={20} /> : "Resend Verification"}
             </Button>
             <Button
               variant="outlined"
               onClick={() => navigate("/login")}
-              sx={{ textTransform: 'none' }}
-            >
+              sx={{ textTransform: "none" }}>
               Back to Login
             </Button>
           </div>
