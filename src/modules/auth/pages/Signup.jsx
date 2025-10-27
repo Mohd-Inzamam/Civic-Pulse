@@ -15,10 +15,10 @@ import {
 } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { LoadScript, Autocomplete } from "@react-google-maps/api";
-import { useRef } from "react";
+// import { LoadScript, Autocomplete } from "@react-google-maps/api";
+// import { useRef } from "react";
 
-const libraries = ["places"];
+// const libraries = ["places"];
 // let
 const ROLES = [
   "Commissioner",
@@ -45,7 +45,7 @@ const ROLES = [
 
 export default function Signup() {
   const navigate = useNavigate();
-  const autocompleteRef = useRef(null);
+  // const autocompleteRef = useRef(null);
   const [role, setRole] = useState("user"); // user | admin
   const [form, setForm] = useState({
     name: "",
@@ -60,20 +60,20 @@ export default function Signup() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleRoleChange = (_, newRole) => {
-    if (newRole) {
-      setRole(newRole);
-      setForm({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        ssn: "",
-        department: "",
-      });
-      setFieldErrors({});
-    }
-  };
+  // const handleRoleChange = (_, newRole) => {
+  //   if (newRole) {
+  //     setRole(newRole);
+  //     setForm({
+  //       name: "",
+  //       email: "",
+  //       password: "",
+  //       confirmPassword: "",
+  //       ssn: "",
+  //       department: "",
+  //     });
+  //     setFieldErrors({});
+  //   }
+  // };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

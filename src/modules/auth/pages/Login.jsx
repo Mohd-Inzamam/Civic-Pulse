@@ -36,18 +36,18 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleRoleChange = (_, newRole) => {
-    if (newRole) {
-      setRole(newRole);
-      setForm({
-        email: "",
-        password: "",
-        department: "",
-        employeeId: "",
-      });
-      setFieldErrors({});
-    }
-  };
+  // const handleRoleChange = (_, newRole) => {
+  //   if (newRole) {
+  //     setRole(newRole);
+  //     setForm({
+  //       email: "",
+  //       password: "",
+  //       department: "",
+  //       employeeId: "",
+  //     });
+  //     setFieldErrors({});
+  //   }
+  // };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });

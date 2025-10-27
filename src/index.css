@@ -1,20 +1,3 @@
-/* === Theme Variables === */
-:root {
-  --bg-light: #E4E7EB;
-  /* Slightly darker background */
-  --bg-surface: #F9FAFB;
-  /* Lighter card surface */
-  --border: #CBD2D9;
-  --text-secondary: #9AA5B1;
-  --text-primary: #616E7C;
-  /* Slightly darker text for contrast */
-  --radius: 12px;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  /* a bit deeper */
-}
-
-
-/* === Existing body reset === */
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -22,18 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  background-color: var(--bg-light);
-  color: var(--text-primary);
-
-  padding-top: 64px;
-}
-
-@media (max-width: 600px) {
-  body {
-    padding-top: 56px;
-    /* mobile height */
-  }
 }
 
 code {

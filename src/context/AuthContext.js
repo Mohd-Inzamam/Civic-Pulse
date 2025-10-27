@@ -6,8 +6,8 @@ import {
     GoogleAuthProvider,
     signInWithRedirect,
     getRedirectResult,
-    setPersistence,
-    browserLocalPersistence,
+    // setPersistence,
+    // browserLocalPersistence,
     signOut,
 } from "firebase/auth";
 import { app } from "../lib/firebase"; // ⬅️ make sure this path is correct

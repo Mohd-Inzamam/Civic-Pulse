@@ -1,14 +1,46 @@
+// App.js
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import IssuePage from "./pages/IssuePage";
-import IssueDetail from "./pages/IssueDetail";
-import Dashboard from "./modules/pages/Dashboard";
+import IssuePage from "./modules/issues/pages/IssuePage";
+import IssueDetail from "./modules/issues/pages/IssueDetail";
+import Dashboard from "./modules/dashboard/pages/Dashboard";
 import { useState } from "react";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
-import "./App.css"
+import Signup from "./modules/auth/pages/Signup";
+import Login from "./modules/auth/pages/Login";
 
-const dummyIssues = [];
+const dummyIssues = [
+  // Example dummy issues (optional, remove if you want empty state at start)
+  {
+    id: "1",
+    title: "Pothole on Main Road",
+    description: "Large pothole causing traffic",
+    category: "Roads",
+    status: "Open",
+    createdBy: "John Doe",
+    upvotes: 0,
+    createdAt: new Date("2025-01-10").toISOString(),
+  },
+  {
+    id: "2",
+    title: "Streetlight not working",
+    description: "Lamp post near park is out",
+    category: "Electricity",
+    status: "In Progress",
+    createdBy: "Jane Smith",
+    upvotes: 0,
+    createdAt: new Date("2025-02-15").toISOString(),
+  },
+  {
+    id: "3",
+    title: "Overflowing garbage bin",
+    description: "Waste not collected for 3 days",
+    category: "Waste",
+    status: "Resolved",
+    createdBy: "Ravi Kumar",
+    upvotes: 0,
+    createdAt: new Date("2025-03-20").toISOString(),
+  },
+];
 
 function App() {
   const [issues, setIssues] = useState(dummyIssues);
@@ -16,16 +48,22 @@ function App() {
     search: "",
     category: "",
     status: "",
-    location: ""
+    location: "",
   });
-
 
   // Function to add a new issue
   const addIssue = (newIssue) => {
-    const issueWithId = { ...newIssue, id: Date.now().toString(), upvotes: 0 }; // add upvotes field
+    const issueWithId = {
+      ...newIssue,
+      id: Date.now().toString(),
+      upvotes: 0,
+      status: newIssue.status || "Open", // default status
+      createdAt: new Date().toISOString(), // 👈 needed for LineChart
+    };
     setIssues([...issues, issueWithId]);
   };
 
+  // Update issue status
   const handleStatusChange = (id, newStatus) => {
     setIssues((prev) =>
       prev.map((issue) =>
@@ -49,7 +87,12 @@ function App() {
         <Route
           path="/issues"
           element={
-            <IssuePage issues={issues} setIssues={setIssues} addIssue={addIssue} filters={filters} />
+            <IssuePage
+              issues={issues}
+              setIssues={setIssues}
+              addIssue={addIssue}
+              filters={filters}
+            />
           }
         />
 

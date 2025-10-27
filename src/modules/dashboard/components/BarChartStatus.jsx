@@ -1,3 +1,4 @@
+// BarChartStatus.jsx
 import {
   BarChart,
   Bar,
@@ -10,13 +11,19 @@ import {
 import { motion } from "framer-motion";
 import { Card, CardContent, Typography } from "@mui/material";
 
-const data = [
-  { status: "Pending", count: 30 },
-  { status: "Resolved", count: 75 },
-  { status: "In Progress", count: 15 },
-];
+export default function BarChartStatus({ issues = [] }) {
+  // Compute counts per status
+  const statusCounts = issues.reduce((acc, issue) => {
+    const st = issue.status || "Unknown";
+    acc[st] = (acc[st] || 0) + 1;
+    return acc;
+  }, {});
 
-export default function BarChartStatus() {
+  const data = Object.keys(statusCounts).map((status) => ({
+    status,
+    count: statusCounts[status],
+  }));
+
   return (
     <motion.div whileHover={{ scale: 1.02 }} transition={{ duration: 0.3 }}>
       <Card sx={{ borderRadius: 3, boxShadow: 3, p: 2 }}>
@@ -38,3 +45,4 @@ export default function BarChartStatus() {
     </motion.div>
   );
 }
+
