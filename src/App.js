@@ -7,6 +7,12 @@ import Dashboard from "./modules/dashboard/pages/Dashboard";
 import { useState } from "react";
 import Signup from "./modules/auth/pages/Signup";
 import Login from "./modules/auth/pages/Login";
+import ForgotPassword from "./modules/auth/pages/ForgotPassword";
+import ResetPassword from "./modules/auth/pages/ResetPassword";
+import EmailVerification from "./modules/auth/pages/EmailVerification";
+import Unauthorized from "./pages/Unauthorized";
+import AuthGuard from "./components/auth/AuthGuard";
+import SessionTimeout from "./components/auth/SessionTimeout";
 
 const dummyIssues = [
   // Example dummy issues (optional, remove if you want empty state at start)
@@ -75,46 +81,70 @@ function App() {
   return (
     <div className="App">
       <Navbar setFilters={setFilters} />
+      <SessionTimeout />
 
       <Routes>
-        {/* Home route */}
+        {/* Public routes */}
         <Route
           path="/"
-          element={<h2 className="text-center mt-5">Welcome to CivicPulse</h2>}
+          element={
+            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+              <h2 style={{ color: 'var(--color-primary)', fontWeight: 'bold' }}>
+                Welcome to CivicPulse
+              </h2>
+            </div>
+          }
         />
 
-        {/* Issues Page */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/verify-email" element={<EmailVerification />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+
+        {/* Protected routes */}
         <Route
           path="/issues"
           element={
-            <IssuePage
-              issues={issues}
-              setIssues={setIssues}
-              addIssue={addIssue}
-              filters={filters}
-            />
+            <AuthGuard>
+              <IssuePage
+                issues={issues}
+                setIssues={setIssues}
+                addIssue={addIssue}
+                filters={filters}
+              />
+            </AuthGuard>
           }
         />
 
-        {/* Issue Details Page */}
         <Route
           path="/issues/:id"
-          element={<IssueDetail issues={issues} setIssues={setIssues} />}
+          element={
+            <AuthGuard>
+              <IssueDetail issues={issues} setIssues={setIssues} />
+            </AuthGuard>
+          }
         />
 
-        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
-            <Dashboard issues={issues} updateIssueStatus={handleStatusChange} />
+            <AuthGuard>
+              <Dashboard issues={issues} updateIssueStatus={handleStatusChange} />
+            </AuthGuard>
           }
         />
 
-        {/* Sign up page */}
-        <Route path="/signup" element={<Signup />} />
-
-        {/* Login page */}
-        <Route path="/login" element={<Login />} />
+        {/* Admin-only routes */}
+        <Route
+          path="/admin/*"
+          element={
+            <AuthGuard requiredRole="admin">
+              <div>Admin Panel - Coming Soon</div>
+            </AuthGuard>
+          }
+        />
       </Routes>
     </div>
   );

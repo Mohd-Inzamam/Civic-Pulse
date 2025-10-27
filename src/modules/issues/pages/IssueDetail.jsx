@@ -5,11 +5,12 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Chip,
   Divider,
   Button,
 } from "@mui/material";
 import { useState, useEffect } from "react";
+import StatusBadge from "../../components/common/StatusBadge";
+import CategoryBadge from "../../components/common/CategoryBadge";
 
 function IssueDetail({ issues, setIssues }) {
   const { id } = useParams();
@@ -74,32 +75,23 @@ function IssueDetail({ issues, setIssues }) {
 
               <Row className="mt-3">
                 <Col sm={6}>
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
                     📍 <b>Location:</b> {issue.location}
                   </Typography>
                 </Col>
                 <Col sm={6}>
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
                     🏷 <b>Category:</b>{" "}
-                    <Chip label={issue.category} color="primary" />
+                    <CategoryBadge category={issue.category} />
                   </Typography>
                 </Col>
               </Row>
 
               <Row className="mt-3">
                 <Col>
-                  <Typography variant="subtitle1">
+                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
                     ✅ <b>Status:</b>{" "}
-                    <Chip
-                      label={issue.status}
-                      color={
-                        issue.status === "Open"
-                          ? "error"
-                          : issue.status === "In Progress"
-                          ? "warning"
-                          : "success"
-                      }
-                    />
+                    <StatusBadge status={issue.status} />
                   </Typography>
                 </Col>
               </Row>
@@ -110,9 +102,10 @@ function IssueDetail({ issues, setIssues }) {
                   <Button
                     variant="outlined"
                     onClick={handleUpvote}
-                    disabled={votedIssues.includes(issue.id)}>
-                    👍 {votedIssues.includes(issue.id) ? "Voted" : "Upvote"} (
-                    {issue.upvotes})
+                    disabled={votedIssues.includes(issue.id)}
+                    sx={{ textTransform: 'none' }}
+                  >
+                    👍 {votedIssues.includes(issue.id) ? "Voted" : "Upvote"} ({issue.upvotes})
                   </Button>
                 </Col>
               </Row>

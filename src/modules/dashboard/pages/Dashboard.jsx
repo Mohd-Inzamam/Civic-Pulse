@@ -29,7 +29,7 @@ const Dashboard = ({ issues, updateIssueStatus }) => {
   ];
 
   return (
-    <Container fluid className="mt-4">
+    <Container fluid className="mt-4" sx={{ backgroundColor: 'background.default', minHeight: '100vh' }}>
       <Row className="justify-content-center">
         <Col md={10}>
           <SummaryCards summary={summary} />

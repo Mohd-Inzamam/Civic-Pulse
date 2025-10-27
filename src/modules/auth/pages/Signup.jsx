@@ -2,24 +2,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from "react-bootstrap";
 import {
-  Card,
-  CardContent,
-  TextField,
-  Button,
   Typography,
   Alert,
-  CircularProgress,
   Divider,
-  // ToggleButton,
-  // ToggleButtonGroup,
+  Button,
 } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-// import { LoadScript, Autocomplete } from "@react-google-maps/api";
-// import { useRef } from "react";
 
-// const libraries = ["places"];
-// let
+// Import reusable components
+import FormField from "../../components/common/FormField";
+import PasswordField from "../../components/common/PasswordField";
+import SelectField from "../../components/common/SelectField";
+import SubmitButton from "../../components/common/SubmitButton";
+import RoleToggle from "../../components/common/RoleToggle";
+import PageCard from "../../components/common/PageCard";
+import PasswordStrengthIndicator from "../../components/common/PasswordStrengthIndicator";
+
 const ROLES = [
   "Commissioner",
   "Deputy Commissioner",
@@ -45,8 +44,7 @@ const ROLES = [
 
 export default function Signup() {
   const navigate = useNavigate();
-  // const autocompleteRef = useRef(null);
-  const [role, setRole] = useState("user"); // user | admin
+  const [role, setRole] = useState("user");
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -54,26 +52,17 @@ export default function Signup() {
     confirmPassword: "",
     ssn: "",
     department: "",
+    employeeId: "",
+    designation: "",
+    state: "",
+    district: "",
+    city: "",
+    ward: "",
   });
   const [fieldErrors, setFieldErrors] = useState({});
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
-  // const handleRoleChange = (_, newRole) => {
-  //   if (newRole) {
-  //     setRole(newRole);
-  //     setForm({
-  //       name: "",
-  //       email: "",
-  //       password: "",
-  //       confirmPassword: "",
-  //       ssn: "",
-  //       department: "",
-  //     });
-  //     setFieldErrors({});
-  //   }
-  // };
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -128,16 +117,6 @@ export default function Signup() {
     setFieldErrors((prev) => ({ ...prev, [name]: errorMsg }));
   };
 
-  const getPasswordStrength = (password) => {
-    let score = 0;
-    if (password.length >= 6) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
-
-    const strengths = ["Weak", "Fair", "Good", "Strong"];
-    return { level: strengths[score - 1] || "", score };
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -159,7 +138,6 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      // Example API call (adjust according to backend route)
       const res = await fetch("/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -168,8 +146,8 @@ export default function Signup() {
 
       if (!res.ok) throw new Error("Failed to register");
 
-      setSuccess("Signup successful! Redirecting to login...");
-      setTimeout(() => navigate("/login"), 1800);
+      setSuccess("Signup successful! Please check your email to verify your account.");
+      setTimeout(() => navigate("/verify-email"), 1800);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -177,318 +155,194 @@ export default function Signup() {
     }
   };
 
-  const passwordStrength = getPasswordStrength(form.password);
+  const roleOptions = ROLES.map(role => ({ value: role, label: role }));
 
   return (
     <Container className="mt-5">
       <Row className="justify-content-center">
         <Col xs={12} md={6} lg={5}>
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}>
-            <Card className="shadow-lg rounded-4">
-              <CardContent className="p-4">
-                <Typography
-                  variant="h4"
-                  align="center"
-                  gutterBottom
-                  sx={{ fontWeight: "bold" }}>
-                  Sign Up
-                </Typography>
+          <PageCard title="Sign Up">
+            {/* Role toggle */}
+            <div className="mb-3">
+              <RoleToggle value={role} onChange={setRole} />
+            </div>
 
-                {/* Role toggle with animated underline */}
-                <div className="mb-3">
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      position: "relative",
-                      background: "#f5f5f5",
-                      borderRadius: "12px",
-                      padding: "4px",
-                    }}>
-                    {["user", "admin"].map((r) => (
-                      <Button
-                        key={r}
-                        onClick={() => setRole(r)}
-                        sx={{
-                          flex: 1,
-                          borderRadius: "10px",
-                          textTransform: "none",
-                          fontWeight: role === r ? "bold" : 500,
-                          color: role === r ? "black" : "gray",
-                          background: "transparent",
-                        }}>
-                        {r === "user" ? "User" : "Admin"}
-                      </Button>
-                    ))}
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Alert severity="error" className="mb-3">
+                    {error}
+                  </Alert>
+                </motion.div>
+              )}
 
-                    <motion.div
-                      layoutId="underline"
-                      transition={{
-                        type: "spring",
-                        stiffness: 400,
-                        damping: 30,
-                      }}
-                      style={{
-                        position: "absolute",
-                        bottom: 4,
-                        left: role === "user" ? "4px" : "50%",
-                        width: "calc(50% - 8px)",
-                        height: "4px",
-                        borderRadius: "2px",
-                        background: "#1976d2",
-                      }}
+              {success && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Alert
+                    severity="success"
+                    icon={<CheckCircleIcon fontSize="inherit" />}
+                    className="mb-3"
+                  >
+                    {success}
+                  </Alert>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <form onSubmit={handleSubmit}>
+              <FormField
+                label="Full Name"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={fieldErrors.name}
+                animationDelay={0.1}
+              />
+
+              <FormField
+                label="Email"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={fieldErrors.email}
+                animationDelay={0.2}
+              />
+
+              <PasswordField
+                value={form.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={fieldErrors.password}
+                animationDelay={0.3}
+              />
+
+              <PasswordStrengthIndicator password={form.password} />
+
+              <PasswordField
+                label="Confirm Password"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={fieldErrors.confirmPassword}
+                animationDelay={0.4}
+              />
+
+              {/* Conditional fields */}
+              <AnimatePresence mode="wait">
+                {role === "user" ? (
+                  <motion.div
+                    key="user-fields"
+                    initial={{ opacity: 0, x: -30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 30 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <FormField
+                      label="SSN"
+                      name="ssn"
+                      value={form.ssn}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={fieldErrors.ssn}
+                      animationDelay={0.5}
                     />
-                  </div>
-                </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="admin-fields"
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    <FormField
+                      label="Department No"
+                      name="department"
+                      value={form.department}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={fieldErrors.department}
+                      animationDelay={0.5}
+                    />
 
-                <AnimatePresence>
-                  {error && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.3 }}>
-                      <Alert severity="error" className="mb-3">
-                        {error}
-                      </Alert>
-                    </motion.div>
-                  )}
+                    <FormField
+                      label="Employee ID"
+                      name="employeeId"
+                      value={form.employeeId || ""}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={fieldErrors.employeeId}
+                      animationDelay={0.6}
+                    />
 
-                  {success && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.3 }}>
-                      <Alert
-                        severity="success"
-                        icon={<CheckCircleIcon fontSize="inherit" />}
-                        className="mb-3">
-                        {success}
-                      </Alert>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    <SelectField
+                      label="Designation"
+                      name="designation"
+                      value={form.designation || ""}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={fieldErrors.designation}
+                      options={roleOptions}
+                      placeholder="Select Designation"
+                      animationDelay={0.7}
+                    />
 
-                <form onSubmit={handleSubmit}>
-                  <TextField
-                    label="Full Name"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth
-                    margin="normal"
-                    error={Boolean(fieldErrors.name)}
-                    helperText={fieldErrors.name}
-                  />
-                  <TextField
-                    label="Email"
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth
-                    margin="normal"
-                    error={Boolean(fieldErrors.email)}
-                    helperText={fieldErrors.email}
-                  />
-                  <TextField
-                    label="Password"
-                    type="password"
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth
-                    margin="normal"
-                    error={Boolean(fieldErrors.password)}
-                    helperText={fieldErrors.password}
-                  />
+                    {/* Office Location Fields */}
+                    {["state", "district", "city", "ward"].map((loc, index) => (
+                      <FormField
+                        key={loc}
+                        label={
+                          loc === "state"
+                            ? "State"
+                            : loc === "district"
+                            ? "District"
+                            : loc === "city"
+                            ? "City / Municipality"
+                            : "Ward / Zone"
+                        }
+                        name={loc}
+                        value={form[loc] || ""}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        error={fieldErrors[loc]}
+                        animationDelay={0.8 + index * 0.1}
+                      />
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-                  {/* Password strength meter */}
-                  {form.password && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}>
-                      <Typography variant="caption">
-                        Strength: {passwordStrength.level}
-                      </Typography>
-                      <div
-                        style={{
-                          height: 6,
-                          borderRadius: 3,
-                          background: "#eee",
-                          marginTop: 4,
-                          marginBottom: 8,
-                        }}>
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${passwordStrength.score * 25}%` }}
-                          transition={{ duration: 0.4 }}
-                          style={{
-                            height: "100%",
-                            borderRadius: 3,
-                            background:
-                              passwordStrength.score <= 1
-                                ? "red"
-                                : passwordStrength.score === 2
-                                ? "orange"
-                                : passwordStrength.score === 3
-                                ? "gold"
-                                : "green",
-                          }}
-                        />
-                      </div>
-                    </motion.div>
-                  )}
+              <SubmitButton
+                loading={loading}
+                animationDelay={role === "admin" ? 1.2 : 0.6}
+              >
+                Sign Up
+              </SubmitButton>
 
-                  <TextField
-                    label="Confirm Password"
-                    type="password"
-                    name="confirmPassword"
-                    value={form.confirmPassword}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    fullWidth
-                    margin="normal"
-                    error={Boolean(fieldErrors.confirmPassword)}
-                    helperText={fieldErrors.confirmPassword}
-                  />
+              <Divider sx={{ my: 2 }} />
 
-                  {/* Conditional field */}
-                  {/* Conditional fields with animation */}
-                  <AnimatePresence mode="wait">
-                    {role === "user" ? (
-                      <motion.div
-                        key="user-fields"
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 30 }}
-                        transition={{ duration: 0.4 }}>
-                        <TextField
-                          label="SSN"
-                          name="ssn"
-                          value={form.ssn}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          fullWidth
-                          margin="normal"
-                          error={Boolean(fieldErrors.ssn)}
-                          helperText={fieldErrors.ssn}
-                        />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="admin-fields"
-                        initial={{ opacity: 0, x: 30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -30 }}
-                        transition={{ duration: 0.4 }}>
-                        <TextField
-                          label="Department No"
-                          name="department"
-                          value={form.department}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          fullWidth
-                          margin="normal"
-                          error={Boolean(fieldErrors.department)}
-                          helperText={fieldErrors.department}
-                        />
-
-                        <TextField
-                          label="Employee ID"
-                          name="employeeId"
-                          value={form.employeeId || ""}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          fullWidth
-                          margin="normal"
-                          error={Boolean(fieldErrors.employeeId)}
-                          helperText={fieldErrors.employeeId}
-                        />
-
-                        {/* Designation Dropdown */}
-                        <TextField
-                          select
-                          name="designation"
-                          value={form.designation || ""}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          fullWidth
-                          margin="normal"
-                          error={Boolean(fieldErrors.designation)}
-                          helperText={fieldErrors.designation}
-                          SelectProps={{ native: true, displayEmpty: true }}>
-                          <option value="" disabled>
-                            Select Designation
-                          </option>
-                          {ROLES.map((pos, idx) => (
-                            <option key={idx} value={pos}>
-                              {pos}
-                            </option>
-                          ))}
-                        </TextField>
-
-                        {/* Office Location Fields */}
-                        {["state", "district", "city", "ward"].map((loc) => (
-                          <TextField
-                            key={loc}
-                            label={
-                              loc === "state"
-                                ? "State"
-                                : loc === "district"
-                                ? "District"
-                                : loc === "city"
-                                ? "City / Municipality"
-                                : "Ward / Zone"
-                            }
-                            name={loc}
-                            value={form[loc] || ""}
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            fullWidth
-                            margin="normal"
-                            error={Boolean(fieldErrors[loc])}
-                            helperText={fieldErrors[loc]}
-                          />
-                        ))}
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    sx={{ mt: 2, py: 1.2, borderRadius: "12px" }}
-                    disabled={loading}>
-                    {loading ? (
-                      <CircularProgress size={24} color="inherit" />
-                    ) : (
-                      "Sign Up"
-                    )}
-                  </Button>
-
-                  <Divider sx={{ my: 2 }} />
-
-                  <Typography align="center" variant="body2">
-                    Already have an account?{" "}
-                    <Button variant="text" onClick={() => navigate("/login")}>
-                      Login
-                    </Button>
-                  </Typography>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
+              <Typography align="center" variant="body2">
+                Already have an account?{" "}
+                <Button variant="text" onClick={() => navigate("/login")}>
+                  Login
+                </Button>
+              </Typography>
+            </form>
+          </PageCard>
         </Col>
       </Row>
     </Container>

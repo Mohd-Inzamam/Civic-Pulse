@@ -1,19 +1,26 @@
 import { useState } from "react";
 import {
-  Card,
-  CardContent,
   Typography,
-  TextField,
   Button,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-  FormHelperText,
   Grid,
+  Card,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { PhotoCamera } from "@mui/icons-material";
+
+// Import reusable components
+import FormField from "../../components/common/FormField";
+import SelectField from "../../components/common/SelectField";
+import SubmitButton from "../../components/common/SubmitButton";
+import PageCard from "../../components/common/PageCard";
+
+const categoryOptions = [
+  { value: "Road", label: "Road" },
+  { value: "Electricity", label: "Electricity" },
+  { value: "Water", label: "Water" },
+  { value: "Garbage", label: "Garbage" },
+  { value: "Other", label: "Other" },
+];
 
 function ReportIssue({ addIssue }) {
   const [formData, setFormData] = useState({
@@ -99,198 +106,164 @@ function ReportIssue({ addIssue }) {
   };
 
   return (
-    <div style={{ background: "#f8f9fa", minHeight: "100vh", padding: "30px" }}>
-      <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}>
-        <Card
-          elevation={6}
-          sx={{
-            borderRadius: "20px",
-            mt: 3,
-            maxWidth: 700,
-            mx: "auto",
-            p: 3,
-          }}>
-          <CardContent>
-            <Typography
-              variant="h4"
-              align="center"
-              color="primary"
-              gutterBottom
-              sx={{ fontWeight: "bold", mb: 3 }}>
-              Report an Issue
-            </Typography>
+    <div style={{ background: 'var(--color-bg-default)', minHeight: '100vh', padding: '30px' }}>
+      <PageCard title="Report an Issue">
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={3}>
+            {/* Title - full width */}
+            <Grid item xs={12}>
+              <FormField
+                label="Title"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                error={errors.title}
+                animationDelay={0.1}
+              />
+            </Grid>
 
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={3}>
-                {/* Title - full width */}
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Title"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    error={!!errors.title}
-                    helperText={errors.title}
+            {/* Description - full width */}
+            <Grid item xs={12}>
+              <FormField
+                label="Description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                multiline
+                rows={3}
+                error={errors.description}
+                animationDelay={0.2}
+              />
+            </Grid>
+
+            {/* Category + Location side by side */}
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                label="Category"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                error={errors.category}
+                options={categoryOptions}
+                placeholder="Select Category"
+                animationDelay={0.3}
+              />
+            </Grid>
+            
+            <Grid item xs={12} sm={6}>
+              <FormField
+                label="Location"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                error={errors.location}
+                animationDelay={0.4}
+              />
+            </Grid>
+
+            {/* Image Upload - full width */}
+            <Grid item xs={12}>
+              <Button
+                variant="outlined"
+                component="label"
+                fullWidth
+                startIcon={<PhotoCamera />}
+                sx={{
+                  py: 1.5,
+                  borderRadius: 2,
+                  textTransform: "none",
+                  fontWeight: "bold",
+                }}
+              >
+                {imageFile ? "Change Image" : "Upload Image"}
+                <input
+                  type="file"
+                  hidden
+                  accept="image/*"
+                  onChange={handleFileChange}
+                />
+              </Button>
+              {errors.image && (
+                <Typography variant="caption" color="error" sx={{ mt: 1, display: 'block' }}>
+                  {errors.image}
+                </Typography>
+              )}
+            </Grid>
+
+            {/* Image Preview - full width */}
+            {preview && (
+              <Grid item xs={12}>
+                <Card
+                  sx={{
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    boxShadow: 2,
+                  }}
+                >
+                  <img
+                    src={preview}
+                    alt="Preview"
+                    style={{
+                      width: "100%",
+                      maxHeight: "250px",
+                      objectFit: "cover",
+                    }}
                   />
-                </Grid>
-
-                {/* Description - full width */}
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    multiline
-                    rows={3}
-                    error={!!errors.description}
-                    helperText={errors.description}
-                  />
-                </Grid>
-
-                {/* Category + Location side by side */}
-                <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth error={!!errors.category}>
-                    <InputLabel>Category</InputLabel>
-                    <Select
-                      name="category"
-                      value={formData.category}
-                      onChange={handleChange}>
-                      <MenuItem value="">Select Category</MenuItem>
-                      <MenuItem value="Road">Road</MenuItem>
-                      <MenuItem value="Electricity">Electricity</MenuItem>
-                      <MenuItem value="Water">Water</MenuItem>
-                      <MenuItem value="Garbage">Garbage</MenuItem>
-                      <MenuItem value="Other">Other</MenuItem>
-                    </Select>
-                    <FormHelperText>{errors.category}</FormHelperText>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleChange}
-                    error={!!errors.location}
-                    helperText={errors.location}
-                  />
-                </Grid>
-
-                {/* Image Upload - full width */}
-                <Grid item xs={12}>
-                  <Button
-                    variant="outlined"
-                    component="label"
-                    fullWidth
-                    startIcon={<PhotoCamera />}
-                    sx={{
-                      py: 1.5,
-                      borderRadius: "10px",
-                      textTransform: "none",
-                      fontWeight: "bold",
-                    }}>
-                    {imageFile ? "Change Image" : "Upload Image"}
-                    <input
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      onChange={handleFileChange}
-                    />
-                  </Button>
-                  {errors.image && (
-                    <FormHelperText error>{errors.image}</FormHelperText>
-                  )}
-                </Grid>
-
-                {/* Image Preview - full width */}
-                {preview && (
-                  <Grid item xs={12}>
-                    <Card
-                      sx={{
-                        borderRadius: "12px",
-                        overflow: "hidden",
-                        boxShadow: 2,
-                      }}>
-                      <img
-                        src={preview}
-                        alt="Preview"
-                        style={{
-                          width: "100%",
-                          maxHeight: "250px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </Card>
-                  </Grid>
-                )}
-
-                {/* Status + Upvotes side by side */}
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label="Status"
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                    error={!!errors.status}
-                    helperText={errors.status}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    type="number"
-                    label="Upvotes"
-                    name="upvotes"
-                    value={formData.upvotes}
-                    onChange={handleChange}
-                    disabled
-                    helperText="Upvotes will be auto-handled later"
-                  />
-                </Grid>
-
-                {/* Created By - full width */}
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Created By"
-                    name="createdBy"
-                    value={formData.createdBy}
-                    onChange={handleChange}
-                    error={!!errors.createdBy}
-                    helperText={errors.createdBy}
-                  />
-                </Grid>
-
-                {/* Submit Button - full width */}
-                <Grid item xs={12}>
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    fullWidth
-                    sx={{
-                      py: 1.5,
-                      fontWeight: "bold",
-                      borderRadius: "10px",
-                      textTransform: "none",
-                      background:
-                        "linear-gradient(90deg, #1976d2 0%, #2196f3 100%)",
-                    }}>
-                    Submit Issue
-                  </Button>
-                </Grid>
+                </Card>
               </Grid>
-            </form>
-          </CardContent>
-        </Card>
-      </motion.div>
+            )}
+
+            {/* Status + Upvotes side by side */}
+            <Grid item xs={12} sm={6}>
+              <FormField
+                label="Status"
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                error={errors.status}
+                animationDelay={0.5}
+              />
+            </Grid>
+            
+            <Grid item xs={12} sm={6}>
+              <FormField
+                label="Upvotes"
+                name="upvotes"
+                type="number"
+                value={formData.upvotes}
+                onChange={handleChange}
+                disabled
+                helperText="Upvotes will be auto-handled later"
+                animationDelay={0.6}
+              />
+            </Grid>
+
+            {/* Created By - full width */}
+            <Grid item xs={12}>
+              <FormField
+                label="Created By"
+                name="createdBy"
+                value={formData.createdBy}
+                onChange={handleChange}
+                error={errors.createdBy}
+                animationDelay={0.7}
+              />
+            </Grid>
+
+            {/* Submit Button - full width */}
+            <Grid item xs={12}>
+              <SubmitButton
+                animationDelay={0.8}
+                sx={{
+                  background: "linear-gradient(90deg, #1976d2 0%, #2196f3 100%)",
+                }}
+              >
+                Submit Issue
+              </SubmitButton>
+            </Grid>
+          </Grid>
+        </form>
+      </PageCard>
     </div>
   );
 }
